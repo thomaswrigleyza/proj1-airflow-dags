@@ -10,6 +10,11 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v2'
+              with:
+                credentials_json: '${{ secrets.GCP_COMPOSE_KEY }}'
+
             - name: Checkout code
               uses: actions/checkout@v3
 
@@ -17,7 +22,6 @@ jobs:
               uses: google-github-actions/setup-gcloud@v1
               with:
                 project_id: utility-replica-441110-u8
-                service_account_key: ${{ secrets.GCP_COMPOSE_KEY }}
 
             - name: Verify authentication
               run: |
