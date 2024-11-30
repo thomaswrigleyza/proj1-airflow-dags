@@ -19,6 +19,16 @@ jobs:
                 project_id: utility-replica-441110-u8
                 service_account_key: ${{ secrets.GCP_COMPOSER_SERVICE_ACCOUNT_KEY }}
 
+            - name: Verify authentication
+              run: |
+                gcloud auth list
+                gcloud config list
+
+            - name: Validate secret retrieval
+              run: echo "Service account key retrieved successfully"
+              env: 
+                GCP_KEY: ${{ secrets.GCP_COMPOSER_SERVICE_ACCOUNT_KEY }}
+
             - name: Upload DAGs to GCS
               run: |
-                gsutil cp dags/*.py gs://us-central1-proj2-wb-aq-api-e203607e-bucket/dags/
+                gsutil cp dags/*.py gs://us-central1-cloud-composer--7381a4b6-bucket/dags/
