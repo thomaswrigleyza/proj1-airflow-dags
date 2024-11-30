@@ -17,7 +17,7 @@ jobs:
               uses: google-github-actions/setup-gcloud@v1
               with:
                 project_id: utility-replica-441110-u8
-                service_account_key: ${{ secrets.GCP_COMPOSER_SERVICE_ACCOUNT_KEY }}
+                service_account_key: ${{ secrets.GCP_COMPOSE_KEY }}
 
             - name: Verify authentication
               run: |
@@ -27,7 +27,7 @@ jobs:
             - name: Validate secret retrieval
               run: echo "Service account key retrieved successfully"
               env: 
-                GCP_KEY: ${{ secrets.GCP_COMPOSER_SERVICE_ACCOUNT_KEY }}
+                GCP_KEY: ${{ secrets.GCP_COMPOSE_KEY }}
 
             - name: Upload DAGs to GCS
               run: |
