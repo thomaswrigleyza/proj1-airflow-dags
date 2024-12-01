@@ -7,6 +7,8 @@ from datetime import timedelta
 import requests
 import json
 import os
+from google.cloud import bigquery
+from google.oauth2 import service_account
 
 default_args = {
     'owner': 'airflow',
@@ -55,8 +57,31 @@ with DAG(
     )
 
     def insert_data_to_bigquery(**kwargs):
-        from google.cloud import bigquery
-        client = bigquery.Client()
+        # Construct keyfile JSON from Airflow Variables
+        keyfile_data = {
+            "type": Variable.get("gcp_type"),
+            "project_id": Variable.get("gcp_project_id"),
+            "private_key_id": Variable.get("gcp_private_key_id"),
+            "private_key": Variable.get("gcp_private_key").replace("\\n", "\n"),
+            "client_email": Variable.get("gcp_client_email"),
+            "client_id": Variable.get("gcp_client_id"),
+            "auth_uri": Variable.get("gcp_auth_uri"),
+            "token_uri": Variable.get("gcp_token_uri"),
+            "auth_provider_x509_cert_url": Variable.get("gcp_auth_provider_x509_cert_url"),
+            "client_x509_cert_url": Variable.get("gcp_client_x509_cert_url"),
+            "universe_domain": Variable.get("gcp_universe_domain")
+        }
+        
+        # Authenticate with the keyfile
+        keyfile_path = "/tmp/airflow_gcp_key.json"
+        with open(keyfile_path, "w") as keyfile:
+            json.dump(keyfile_data, keyfile)
+
+        credentials = service_account.Credentials.from_service_account_file(keyfile_path)
+
+        # Initialize BigQuery client
+        client = bigquery.Client(credentials=credentials, project="utility-replica-441110-u8")
+        
 
         table_id = "utility-replica-441110-u8.openweather_data.src_openweather_aqi"
         rows = kwargs['ti'].xcom_pull(key='rows', task_ids='fetch_openweather_data')
