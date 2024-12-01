@@ -30,7 +30,6 @@ with DAG(
 
     # Testing OpenWeather API request for Cape Town only. Will update method to fetch for multiple cities in next iteration
     def fetch_openweather_data(**kwargs):
-        api_key = Variable.get("openweather_api_key")
         url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat=33.9221&lon=18.4231&appid={api_key}"
         response = requests.get(url)
         response.raise_for_status()
