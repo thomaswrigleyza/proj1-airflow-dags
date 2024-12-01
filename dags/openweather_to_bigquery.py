@@ -8,7 +8,7 @@ import requests
 import json
 import os
 
-api_key = os.environ("OPENWEATHER_API_KEY")
+api_key = os.environ.get("OPENWEATHER_API_KEY")
 
 default_args = {
     'owner': 'airflow',
