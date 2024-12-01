@@ -7,7 +7,7 @@ import requests
 import json
 import os
 
-api_key = os.getenv("OPENWEATHER_API_KEY")
+
 
 
 
@@ -30,7 +30,8 @@ with DAG(
 
     # Testing OpenWeather API request for Cape Town only. Will update method to fetch for multiple cities in next iteration
     def fetch_openweather_data(**kwargs):
-        url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat=33.9221&lon=18.4231&appid=a33cfe7a0c92f22f29c47e3efa24a066"
+        api_key = os.getenv("OPENWEATHER_API_KEY")
+        url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat=33.9221&lon=18.4231&appid={api_key}"
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
