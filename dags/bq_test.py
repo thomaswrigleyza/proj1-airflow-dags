@@ -3,6 +3,8 @@ from airflow.operators.python_operator import PythonOperator
 from google.cloud import bigquery
 from google.oauth2 import service_account
 from datetime import datetime
+from airflow.models import Variable
+import json
 
 default_args = {
     'owner': 'airflow',
@@ -13,8 +15,26 @@ default_args = {
 }
 
 def test_bigquery():
+    # Construct keyfile JSON from Airflow Variables
+    keyfile_data = {
+        "type": Variable.get("gcp_type"),
+        "project_id": Variable.get("gcp_project_id"),
+        "private_key_id": Variable.get("gcp_private_key_id"),
+        "private_key": Variable.get("gcp_private_key").replace("\\n", "\n"),
+        "client_email": Variable.get("gcp_client_email"),
+        "client_id": Variable.get("gcp_client_id"),
+        "auth_uri": Variable.get("gcp_auth_uri"),
+        "token_uri": Variable.get("gcp_token_uri"),
+        "auth_provider_x509_cert_url": Variable.get("gcp_auth_provider_x509_cert_url"),
+        "client_x509_cert_url": Variable.get("gcp_client_x509_cert_url"),
+        "universe_domain": Variable.get("gcp_universe_domain")
+    }
+    
     # Authenticate with the keyfile
-    keyfile_path = "/Users/thomaswrigley/Code/Personal/InsightEngine/Keys/airflow_bq_key.json"
+    keyfile_path = "/tmp/airflow_gcp_key.json"
+    with open(keyfile_path, "w") as keyfile:
+        json.dump(keyfile_data, keyfile)
+
     credentials = service_account.Credentials.from_service_account_file(keyfile_path)
 
     # Initialize BigQuery client
