@@ -112,7 +112,7 @@ with DAG(
         rows = []
 
         for city in cities:
-            url = f"https://api.openweathermap.org/data/2.5/air_pollution?lat={city['lat']}&lon={['lon']}&appid={api_key}"
+            url = f"https://api.openweathermap.org/data/2.5/air_pollution?lat={city['lat']}&lon={city['lon']}&appid={api_key}"
             response = requests.get(url)
             response.raise_for_status()
             data = response.json  
