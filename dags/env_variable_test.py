@@ -1,58 +1,33 @@
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
-from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
-from datetime import datetime
-from datetime import timedelta
-import requests
-import json
-import os
 from airflow.models import Variable
+from datetime import datetime
 
-
-api_key = Variable.get("openweather_api_key")
-
+# Default arguments for the DAG
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
 }
 
+# Define the DAG
 with DAG(
-    dag_id='env_variable_test',
+    dag_id='testing_env_variable',
     default_args=default_args,
     start_date=datetime(2023, 1, 1),
-    schedule_interval=None, # Will update to @daily in next iteration
+    schedule_interval=None,  # Manual trigger only
     catchup=False,
 ) as dag:
 
-    # Testing OpenWeather API request for Cape Town only. Will update method to fetch for multiple cities in next iteration
-     def fetch_openweather_data(**kwargs):
-        api_key = os.environ.getenv("OPENWEATHER_API_KEY")
-        url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat=33.9221&lon=18.4231&appid=a33cfe7a0c92f22f29c47e3efa24a066"
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()
+    # Task to retrieve and print the variable
+    def print_variable():
+        # Retrieve the variable
+        api_key = Variable.get("openweather_api_key", default_var="Variable not found")
+        print(f"Retrieved Variable: {api_key}")
 
-        rows = []
-        for pollutant, value in data["list"][0]["components"].items():
-            row = {
-                "lon": data["coord"]["lon"],
-                "lat": data["coord"]["lat"],
-                "aqi": data["list"][0]["main"]["aqi"],
-                "pollutant": pollutant,
-                "value": value,
-                "dt": data["list"][0]["dt"],
-            }
-            rows.append(row)
-        
-    
-        kwargs['ti'].xcom_push(key='rows', value=rows)
-
-        fetch_data = PythonOperator(
-            task_id='fetch_openweather_data',
-            python_callable=fetch_openweather_data,
-            provide_context=True,
-        )
+    print_var_task = PythonOperator(
+        task_id='print_variable',
+        python_callable=print_variable,
+    )
