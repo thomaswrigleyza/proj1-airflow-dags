@@ -27,5 +27,5 @@ with DAG(
             }
         },
         location="US",
-        gcp_conn_id='bq_airflow',
+        gcp_conn_id='bigquery_airflow_default',
     )
