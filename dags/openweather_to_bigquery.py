@@ -115,7 +115,7 @@ with DAG(
             url = f"https://api.openweathermap.org/data/2.5/air_pollution?lat={city['lat']}&lon={city['lon']}&appid={api_key}"
             response = requests.get(url)
             response.raise_for_status()
-            data = response.json  
+            data = response.json()  
         
             for pollutant, value in data["list"][0]["components"].items():
                 row = {
