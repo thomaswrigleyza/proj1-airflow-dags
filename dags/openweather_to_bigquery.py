@@ -8,7 +8,7 @@ import requests
 import json
 import os
 from google.cloud import bigquery
-from google.oauth2 import service_account
+
 
 default_args = {
     'owner': 'airflow',
@@ -23,7 +23,7 @@ with DAG(
     dag_id='openweather_to_bigquery',
     default_args=default_args,
     start_date=datetime(2023, 1, 1),
-    schedule_interval=None, # Will update to @daily in next iteration
+    schedule_interval='0 6 * * *',
     catchup=False,
 ) as dag:
 
