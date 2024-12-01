@@ -19,13 +19,13 @@ def test_keyfile_access():
         raise ValueError(f"Error accessing keyfile: {e}")
 
 with DAG(
-    dag_id='test_keyfile_access',
+    dag_id='test_path',
     default_args=default_args,
     start_date=datetime(2023, 1, 1),
     schedule_interval=None,
     catchup=False,
 ) as dag:
     test_access = PythonOperator(
-        task_id='test_keyfile_access',
+        task_id='test_path',
         python_callable=test_keyfile_access,
     )
