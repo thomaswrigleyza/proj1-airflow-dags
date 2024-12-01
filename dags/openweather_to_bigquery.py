@@ -5,8 +5,9 @@ from datetime import datetime
 from datetime import timedelta
 import requests
 import json
-from airflow.models import Variable
-api_key = Variable.get("OPENWEATHER_API_KEY")
+import os
+
+api_key = os.getenv("OPENWEATHER_API_KEY")
 
 
 
