@@ -99,10 +99,10 @@ cities = [
 ]
 
 with DAG(
-    dag_id='openweather_to_bigquery',
+    dag_id='openweather_aqi',
     default_args=default_args,
     start_date=datetime(2023, 1, 1),
-    schedule_interval='0 6 * * *',
+    schedule_interval='0 9 * * *',
     catchup=False,
 ) as dag:
 
