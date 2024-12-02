@@ -9,5 +9,4 @@ I struggle with my sinuses, particularly during changes of season. On a windy No
 
 Project #1 is an investigation of these questions, as well as a demonstration of an end-to-end data solution. Data is sourced from OpenWeather's API and the World Bank's API, extracted and loaded by Airflow into a BigQuery data warehouse. These data are transformed into staging and mart tables by dbt Cloud. Visualisations are rendered in Looker Studio.
 
-See https://www.thomaswrigley.com/proj2 for more detail.
 
